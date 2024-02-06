@@ -45,6 +45,8 @@ We often apply this annotation to exclude fields that may not be relevant or cou
                 .map(role -> new SimpleGrantedAuthority(role.getName().name()))
                 .collect(Collectors.toList());
 
+
+
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),

@@ -48,12 +48,6 @@ public class AuthController {
     JwtUtils jwtUtils;
 
 
-    @GetMapping()
-    private String getTest(){
-        // BORRAR ESTO DESPUES
-        return "this is the test endpoint";
-    }
-
     @PostMapping("/signin")
     private ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
         Authentication authentication = authenticationManager
