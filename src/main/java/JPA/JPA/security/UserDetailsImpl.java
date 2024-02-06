@@ -19,6 +19,13 @@ public class UserDetailsImpl implements UserDetails {
 
     private String email;
 
+    /*
+    We use the @JsonIgnore annotation to specify a method or field that should be ignored during serialization and deserialization processes.
+    This marker annotation belongs to the Jackson library.
+
+We often apply this annotation to exclude fields that may not be relevant or could contain sensitive information.
+ We use it on a field or a method to mark a property we’d like to ignore.
+     */
     @JsonIgnore
     private String password;
 

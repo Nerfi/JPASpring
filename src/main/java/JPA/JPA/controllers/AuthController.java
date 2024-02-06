@@ -84,8 +84,8 @@ public class AuthController {
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             // el original del tutorial seria asi
-            // return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-            return ResponseEntity.badRequest().body("Error: email already take");
+             return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+            //return ResponseEntity.badRequest().body("Error: email already take"); esto tambien funciona pero no envia json
         }
 
 
