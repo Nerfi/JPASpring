@@ -31,8 +31,24 @@ public class JwtUtils {
     @Value("${juanJPA.app.jwtCookieName}")
     private String jwtCookie;
 
+//    public Cookie getCookieFromRequest(HttpServletRequest request, String cookieName) {
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals(cookieName)) {
+//                    return cookie;
+//                }
+//            }
+//        }
+//        return null;
+//    }
+
     public String getJwtFromCookies(HttpServletRequest request) {
+        System.out.println("entramos aqui ?" + request);
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+       // Cookie cookie = getCookieFromRequest(request, jwtCookie);
+
+        System.out.println(cookie + " the cookie");
         if (cookie != null) {
             return cookie.getValue();
         } else {
@@ -42,12 +58,12 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/").maxAge(24 * 60 * 60).httpOnly(true).build();
         return cookie;
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/api").build();
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null).path("/").build();
         return cookie;
     }
 
@@ -86,3 +102,56 @@ public class JwtUtils {
                 .compact();
     }
 }
+
+
+
+
+//@Component
+//public class CookieUtils {
+//
+//
+//   // Adds a cookie to the HTTP response.*
+//    @param response   // the HTTP servlet response to add the cookie to
+//    @param cookieName // the name of the cookie
+//    @param cookieValue //the value of the cookie
+//    @param rememberMe  // to remember the cookie or treat it as session
+//
+//    public void addCookie(HttpServletResponse response, String cookieName, String cookieValue, Boolean rememberMe) {
+//        Cookie cookie = new Cookie(cookieName, cookieValue);
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(true);
+//        if (rememberMe) {
+//            cookie.setMaxAge(30 * 24 * 60 * 60);} else {
+//            cookie.setMaxAge(-1);}
+////        cookie.setDomain(Constants.FRONTEND_URL); // TODO: uncomment when using angular
+////        cookie.setSecure(true); // set to true if using HTTPS
+//        response.addCookie(cookie);
+//    }
+//
+//    /
+//
+//    Removes a token cookie from the provided HttpServletResponse.*
+//    @param response   the HttpServletResponse to remove the token cookie from
+//    @param cookieName the name of the cookie to be removed*/
+//    public void removeCookie(HttpServletResponse response, String cookieName) {
+//        Cookie cookie = new Cookie(cookieName, null);
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(true);
+//        cookie.setMaxAge(0);
+////        cookie.setDomain(Constants.FRONTEND_URL); // TODO: uncomment when using angular
+////        cookie.setSecure(true); // set to true if using HTTPS
+//        response.addCookie(cookie);
+//    }
+//
+//    public Cookie getCookieFromRequest(HttpServletRequest request, String cookieName) {
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookie.getName().equals(cookieName)) {
+//                    return cookie;
+//                }
+//            }
+//        }
+//        return null;
+//    }
+//}
