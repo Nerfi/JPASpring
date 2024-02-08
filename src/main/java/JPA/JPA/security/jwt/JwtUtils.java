@@ -44,9 +44,7 @@ public class JwtUtils {
 //    }
 
     public String getJwtFromCookies(HttpServletRequest request) {
-        System.out.println("entramos aqui ?" + request);
         Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-       // Cookie cookie = getCookieFromRequest(request, jwtCookie);
 
         System.out.println(cookie + " the cookie");
         if (cookie != null) {
@@ -58,6 +56,7 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+        //path should be set to / if we want all the domains to be able to access it
         ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/").maxAge(24 * 60 * 60).httpOnly(true).build();
         return cookie;
     }
