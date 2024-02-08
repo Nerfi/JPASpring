@@ -1,4 +1,10 @@
 package JPA.JPA.repository;
 
-public interface MovieRepository {
+import JPA.JPA.models.Movie;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+
+
+public interface MovieRepository extends JpaRepository<Movie, Long> {
 }

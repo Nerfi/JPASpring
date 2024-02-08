@@ -1,6 +1,8 @@
 package JPA.JPA.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -39,6 +41,10 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+
+    // movies
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Movie> movies = new ArrayList<>();
 
 
     public User() {

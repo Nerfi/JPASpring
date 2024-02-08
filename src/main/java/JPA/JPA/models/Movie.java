@@ -9,7 +9,7 @@ public class Movie {
     //@Id: This annotation specifies the primary key of the entity.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDNETITY es por mysql
-    private Long id;
+    private Long movie_id;
     @NotEmpty
     @Min(2) @Max(120)
     private String title;
@@ -24,23 +24,30 @@ public class Movie {
     @Min(0) @Max(5)
     private int rating;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    //Especifica el nombre de la columna que actúa como clave foránea en la tabla movies
+    private User user;
+
     //necesario si marcamos la clase como @Entity
     public Movie(){}
 
 
-    public Movie(String title, String author, String country, int rating){
+    public Movie(String title, String author, String country, int rating, User user) {
         this.title = title;
         this.author = author;
+
         this.country = country;
         this.rating = rating;
+        this.user = user;
     }
 
     public Long getId(){
-        return  this.id;
+        return  this.movie_id;
     }
 
     public void setId(Long id) {
-        this.id= id;
+        this.movie_id= id;
     }
 
     public String getTitle(){
@@ -56,7 +63,7 @@ public class Movie {
     }
 
     public void setAuthor(String author) {
-        this.title = author;
+        this.author = author;
 
     }
 
