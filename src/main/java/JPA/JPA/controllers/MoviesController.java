@@ -41,6 +41,7 @@ public class MoviesController {
     @PostMapping("/add")
     //@PreAuthorize("hasRole('USER')")
     public ResponseEntity<Void> createMovie(@RequestBody Movie movie, Principal principal) {
+        System.out.println("entramos aqui ");
         Optional<User> optionalUser = userRepository.findByUsername(principal.getName());
 
         if(optionalUser.isPresent()) {
@@ -49,6 +50,13 @@ public class MoviesController {
             Movie movietoSave = new Movie(movie.getTitle(), movie.getAuthor(), movie.getCountry(), movie.getRating(), user);
             //guardamos
             movieRepository.save(movietoSave);
+
+            // Actualizar la lista de películas del usuario
+            user.getMoviesList().add(movietoSave);
+            userRepository.save(user);
+
+          //  System.out.println(user.getMoviesList().size() + " movies by user"); works
+
             return ResponseEntity.ok().build();
         }
 

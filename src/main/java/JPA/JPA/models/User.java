@@ -44,7 +44,10 @@ public class User {
 
     // movies
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    // cascade = CascadeType.ALL esto significa que cualquier operación que realices en un User (como guardar, actualizar, eliminar) se propagará a las Movie asociadas
     private List<Movie> movies = new ArrayList<>();
+
+
 
 
     public User() {
@@ -96,6 +99,16 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    // getter and setter for movies
+
+    public List<Movie> getMoviesList() {
+        return this.movies;
+    }
+
+    public void setMovies(List<Movie> moviesList){
+        this.movies = moviesList;
     }
 
 }

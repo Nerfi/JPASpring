@@ -5,22 +5,24 @@ import jakarta.validation.constraints.*;
 @Entity
 //@Entity annotation defines that a class can be mapped to a table
 @Table(name = "movies")
+
+//PD:  @NotEmpty anotacion solo debe de ser usada en STRINGS, no en numbers
 public class Movie {
     //@Id: This annotation specifies the primary key of the entity.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDNETITY es por mysql
     private Long movie_id;
     @NotEmpty
-    @Min(2) @Max(120)
+    @Size(min = 2, max = 120)
     private String title;
     //maybe this could be an array of authors
     @NotEmpty
-    @Min(2) @Max(120)
+    @Size(min = 2, max = 120)
     private String author;
     @NotEmpty
-    @Min(2) @Max(120)
+    @Size(min = 2, max = 120)
     private String country;
-    @NotEmpty
+    @NotNull
     @Min(0) @Max(5)
     private int rating;
 
@@ -36,7 +38,6 @@ public class Movie {
     public Movie(String title, String author, String country, int rating, User user) {
         this.title = title;
         this.author = author;
-
         this.country = country;
         this.rating = rating;
         this.user = user;
