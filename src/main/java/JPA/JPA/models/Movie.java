@@ -26,6 +26,9 @@ public class Movie {
     @Min(0) @Max(5)
     private int rating;
 
+    @NotEmpty
+    private String owner;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     //Especifica el nombre de la columna que actúa como clave foránea en la tabla movies
@@ -41,6 +44,7 @@ public class Movie {
         this.country = country;
         this.rating = rating;
         this.user = user;
+        //this.owner = owner;
     }
 
     public Long getId(){
@@ -83,6 +87,13 @@ public class Movie {
 
     public void setRating(int rating){
         this.rating =rating;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+    public String getOwner(){
+        return this.owner;
     }
 
 

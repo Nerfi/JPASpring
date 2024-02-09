@@ -10,4 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     boolean  existsByTitle(String title);
+    //metodo para hacer update
+
+    Movie findByIdAndOwner(Long id, String owner);
+
+    boolean existsByIdAndOwner(Long id, String owner);
 }
