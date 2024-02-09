@@ -4,14 +4,18 @@ import JPA.JPA.models.Movie;
 import JPA.JPA.models.User;
 import JPA.JPA.repository.MovieRepository;
 import JPA.JPA.repository.UserRepository;
+import JPA.JPA.security.jwt.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -39,10 +43,16 @@ public class MoviesController {
     }
 
     @PostMapping("/add")
-    //@PreAuthorize("hasRole('USER')")
-    public ResponseEntity<Void> createMovie(@RequestBody Movie movie, Principal principal) {
-        System.out.println("entramos aqui ");
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<?> createMovie(@RequestBody Movie movie, Principal principal,  UriComponentsBuilder ucb) {
+
         Optional<User> optionalUser = userRepository.findByUsername(principal.getName());
+
+        //check if we already have a movie with such title
+        if(movieRepository.existsByTitle(movie.getTitle())) {
+
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: movie name already created!"));
+        }
 
         if(optionalUser.isPresent()) {
             User user = optionalUser.get(); // obtenemos el usuario
@@ -55,28 +65,21 @@ public class MoviesController {
             user.getMoviesList().add(movietoSave);
             userRepository.save(user);
 
-          //  System.out.println(user.getMoviesList().size() + " movies by user"); works
 
-            return ResponseEntity.ok().build();
+
+             URI newMovieLocation = ucb
+                    .path("/movies/{id}")
+                    .buildAndExpand(movietoSave.getId())
+                    .toUri();
+
+             return  ResponseEntity.created(newMovieLocation).build();
+
         }
 
          return ResponseEntity.notFound().build();
 
 
-//        System.out.println("*******************");
-//
-//        System.out.println(movie.getTitle() + " title"); // funciona
-//        System.out.println("*******************");
-//
-//        System.out.println(movie.getRating() + " rating"); // funciona
-//
-//        System.out.println("************************");
-//        System.out.println(movie.getCountry() + " country");
-//        System.out.println("***************************");
-//
-//        System.out.println(movie.getAuthor() +  " author"); // no llega
-        //System.out.println(principal.getName() + " the principal");// funciona
-       // return null;
+
     }
 
 

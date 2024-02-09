@@ -73,13 +73,14 @@ public class AuthController {
     @PostMapping("/signup")
     private ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: Username already taken!"));
+            //return ResponseEntity.badRequest().body(new MessageResponse("Error: Username already taken!"));
+            return ResponseEntity.badRequest().body("Error: Username already taken!");
         }
 
         if (userRepository.existsByEmail(signupRequest.getEmail())) {
             // el original del tutorial seria asi
              return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
-            //return ResponseEntity.badRequest().body("Error: email already take"); esto tambien funciona pero no envia json
+           // return ResponseEntity.badRequest().body("Error: email already take"); // esto tambien funciona pero no envia json
         }
 
 
