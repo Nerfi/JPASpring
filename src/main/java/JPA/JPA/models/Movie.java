@@ -2,6 +2,25 @@ package JPA.JPA.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+// lombok
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@Getter
+@Setter
+@EqualsAndHashCode
+@ToString
+@AllArgsConstructor
+/*
+
+La anotación @AllArgsConstructor en Lombok es una anotación que se utiliza para generar automáticamente un constructor que incluye todos los campos de la clase.
+En otras palabras, Lombok generará un constructor que acepta todos los campos de la clase como parámetros y los inicializa.
+ */
+
 @Entity
 //@Entity annotation defines that a class can be mapped to a table
 @Table(name = "movies")
@@ -35,65 +54,16 @@ public class Movie {
     private User user;
 
     //necesario si marcamos la clase como @Entity
-    public Movie(){}
+    public Movie() {
 
-
-    public Movie(String title, String author, String country, int rating, User user) {
-        this.title = title;
-        this.author = author;
-        this.country = country;
-        this.rating = rating;
-        this.user = user;
-        //this.owner = owner;
     }
 
+
+    // hemos añadido este metodo ya que JPA parece parece que solo entiende el nombre del campo cuando se llama ID(en minisculas) a secas
+    // al haberlo llamado movie_id por las convenciones que tiene no puedo usar metodos del repositorio que sean de buscar mediante el ID, que es el
+    // nombre del field in the class
     public Long getId(){
         return  this.movie_id;
-    }
-
-    public void setId(Long id) {
-        this.movie_id= id;
-    }
-
-    public String getTitle(){
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-
-    }
-    public String getAuthor(){
-        return this.author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-
-    }
-
-
-    public String getCountry() {
-        return this.country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public int getRating(){
-        return this.rating;
-    }
-
-    public void setRating(int rating){
-        this.rating =rating;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
-    }
-    public String getOwner(){
-        return this.owner;
     }
 
 

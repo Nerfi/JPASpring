@@ -56,7 +56,8 @@ public class MoviesController {
         if(optionalUser.isPresent()) {
             User user = optionalUser.get(); // obtenemos el usuario
             // creamos una nueva movie
-            Movie movietoSave = new Movie(movie.getTitle(), movie.getAuthor(), movie.getCountry(), movie.getRating(), user);
+            // in case of error check the null in movie id
+            Movie movietoSave = new Movie(null,movie.getTitle(), movie.getAuthor(), movie.getCountry(), movie.getRating(),user.getUsername(), user);
             //obtenemos el nombre del usuario que esta creando esta resource y lo añadimos a la movie
             movietoSave.setOwner(user.getUsername());
 
@@ -67,9 +68,11 @@ public class MoviesController {
             user.getMoviesList().add(movietoSave);
             userRepository.save(user);
 
+
+
              URI newMovieLocation = ucb
                     .path("/movies/{id}")
-                    .buildAndExpand(movietoSave.getId())
+                    .buildAndExpand(movietoSave.getMovie_id())
                     .toUri();
 
              return  ResponseEntity.created(newMovieLocation).build();
@@ -81,7 +84,6 @@ public class MoviesController {
     }
 
     //update
-    // NO FUNCIONA DE MOMENTO
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<Void> updateMovie(@PathVariable Long id, @RequestBody Movie movie, Principal principal) {
