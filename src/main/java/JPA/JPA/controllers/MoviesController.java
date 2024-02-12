@@ -6,11 +6,13 @@ import JPA.JPA.repository.MovieRepository;
 import JPA.JPA.repository.UserRepository;
 import JPA.JPA.security.jwt.payload.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
+
 
 import java.net.URI;
 import java.security.Principal;
@@ -83,33 +85,23 @@ public class MoviesController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<Void> updateMovie(@PathVariable Long id, @RequestBody Movie movie, Principal principal) {
+    Movie movieToUpdated = movieRepository.findById(id) .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
 
-        Optional<User> optionalUser = userRepository.findByUsername(principal.getName());
-        Optional<Movie> movieToUpdateTest = movieRepository.findById(id);
+    if(movieToUpdated.getOwner().equals(principal.getName())) {
+        //actualizamos con los setters de la clase
+        movieToUpdated.setTitle(movie.getTitle());
+        movieToUpdated.setAuthor(movie.getAuthor());
+        movieToUpdated.setCountry(movie.getCountry());
+        movieToUpdated.setRating(movie.getRating());
 
-        if(optionalUser.isPresent() && movieToUpdateTest.isPresent()) {
-            Movie newMovieUpdated = new Movie(movie.getTitle(), movie.getAuthor(), movie.getCountry(), movie.getRating(), optionalUser.get());
-            //adding the owner
-            newMovieUpdated.setOwner(principal.getName());
-            movieRepository.save(newMovieUpdated);
-            return ResponseEntity.noContent().build();
-        }
+        movieRepository.save(movieToUpdated);
 
-        //System.out.println(movieToUpdateTest + " the movie to updated");
+        // si todo va bien devolvemos un not content como status http
+        return ResponseEntity.noContent().build();
 
-        //Movie movieToUpdate = movieRepository.findByIdAndOwner(id, principal.getName());
-       // System.out.println(movieToUpdate + " movie to update");
+    }
 
-        // si tenemos movie procedemos a actualizar
 
-//        if(movieToUpdate != null && optionalUser.isPresent()) {
-//            // utilizamos movieToUpdate.getId() para saber que id es el que queremos hacer updated, luego añadimos los valores que nos vienen por request
-//            Movie movieUpdated = new Movie(movie.getTitle(), movie.getAuthor(), movie.getCountry(), movie.getRating(), optionalUser.get());
-//            movieUpdated.setOwner(principal.getName());
-//            //devolvemos no content ya que al hacer PUt no hay nada que devolver
-//            movieRepository.save(movieUpdated);
-//            return ResponseEntity.noContent().build();
-//        }
         return ResponseEntity.notFound().build();
     }
 
