@@ -41,19 +41,7 @@ public class MoviesController {
         return ResponseEntity.ok(movies);
     }
 
-    // TODO: CREAR OTRO /ALL METHOD PARA VER SI FUNCIONA NO SE PORQUE NO FUCIONAS
-
-    //FUNCIONA
-    @GetMapping("/all/2")
-    public ResponseEntity<List<Movie>>  all2(){
-        List<Movie> movies = movieRepository.findAll();
-
-        System.out.println(movies + " movies ??");
-//        if (movies.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.ok(movies);
-    }
+ // FALTA END POINT PARA GET/ID SINGLE MOVIE, IMPLEMENTAR DESPUES DE EXCEPTIONS
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
