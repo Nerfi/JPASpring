@@ -1,4 +1,5 @@
 package JPA.JPA.models;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
@@ -13,7 +14,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @EqualsAndHashCode
-@ToString
+@ToString(exclude = "user")
 @AllArgsConstructor
 /*
 
@@ -47,7 +48,8 @@ public class Movie {
 
     @NotEmpty
     private String owner;
-
+//https://stackoverflow.com/questions/65930344/springboot-onetomany-infinite-loop-with-lombok
+    @JsonIgnore // new addition bidireccional error lombok
     @ManyToOne
     @JoinColumn(name = "user_id")
     //Especifica el nombre de la columna que actúa como clave foránea en la tabla movies
