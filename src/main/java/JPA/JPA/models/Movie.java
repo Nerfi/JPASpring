@@ -4,11 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 // lombok
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 
 @Getter
@@ -27,27 +23,31 @@ En otras palabras, Lombok generará un constructor que acepta todos los campos d
 @Table(name = "movies")
 
 //PD:  @NotEmpty anotacion solo debe de ser usada en STRINGS, no en numbers
+
 public class Movie {
     //@Id: This annotation specifies the primary key of the entity.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // IDNETITY es por mysql
     private Long movie_id;
-    @NotEmpty
+    @NotEmpty(message =  "Title debe estar presente")
     @Size(min = 2, max = 120)
     private String title;
     //maybe this could be an array of authors
-    @NotEmpty
+    @NotEmpty(message = "Author debe de estar presente")
     @Size(min = 2, max = 120)
     private String author;
-    @NotEmpty
+    @NotEmpty(message = "Country debe de estar presente")
     @Size(min = 2, max = 120)
     private String country;
-    @NotNull
-    @Min(0) @Max(5)
+
+    @NotNull(message = "Rating debe estar presente ")
+    @Min(0) @Max(value = 5, message = "El valor no puede ser mayor que 5")
     private int rating;
 
-    @NotEmpty
-    private String owner;
+    //@NotEmpty
+    @NonNull
+   private String owner;
+
 //https://stackoverflow.com/questions/65930344/springboot-onetomany-infinite-loop-with-lombok
     @JsonIgnore // new addition bidireccional error lombok
     @ManyToOne
@@ -56,6 +56,7 @@ public class Movie {
     private User user;
 
     //necesario si marcamos la clase como @Entity
+
     public Movie() {
 
     }

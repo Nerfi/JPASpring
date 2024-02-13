@@ -1,12 +1,15 @@
 package JPA.JPA.controllers;
 
+import JPA.JPA.exceptions.MovieAlreadyExists;
 import JPA.JPA.models.Movie;
 import JPA.JPA.models.User;
 import JPA.JPA.repository.MovieRepository;
 import JPA.JPA.repository.UserRepository;
+import JPA.JPA.exceptions.ResourceNotFoundException;
 import JPA.JPA.security.jwt.payload.MessageResponse;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -41,18 +44,27 @@ public class MoviesController {
         return ResponseEntity.ok(movies);
     }
 
- // FALTA END POINT PARA GET/ID SINGLE MOVIE, IMPLEMENTAR DESPUES DE EXCEPTIONS
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Movie> getMovieById(@PathVariable Long id){
+
+
+        Movie singleMovie = movieRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Not found Movie with id = " + id));
+
+        return ResponseEntity.ok(singleMovie);
+    }
 
     @PostMapping("/add")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
-    public ResponseEntity<?> createMovie(@RequestBody Movie movie, Principal principal,  UriComponentsBuilder ucb) {
+    public ResponseEntity<?> createMovie(@Valid  @RequestBody Movie movie, Principal principal, UriComponentsBuilder ucb) {
 
         Optional<User> optionalUser = userRepository.findByUsername(principal.getName());
 
         //check if we already have a movie with such title
         if(movieRepository.existsByTitle(movie.getTitle())) {
 
-            return ResponseEntity.badRequest().body(new MessageResponse("Error: movie name already created!"));
+            throw  new MovieAlreadyExists("Error: movie already exits");
         }
 
         if(optionalUser.isPresent()) {
