@@ -82,8 +82,6 @@ public class MoviesController {
             user.getMoviesList().add(movietoSave);
             userRepository.save(user);
 
-
-
              URI newMovieLocation = ucb
                     .path("/movies/{id}")
                     .buildAndExpand(movietoSave.getMovie_id())
@@ -101,7 +99,7 @@ public class MoviesController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('USER') or hasRole('MODERATOR')")
     public ResponseEntity<Void> updateMovie(@PathVariable Long id, @RequestBody Movie movie, Principal principal) {
-    Movie movieToUpdated = movieRepository.findById(id) .orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
+    Movie movieToUpdated = movieRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Movie not found with id " + id));
 
     if(movieToUpdated.getOwner().equals(principal.getName())) {
         //actualizamos con los setters de la clase
@@ -127,13 +125,13 @@ public class MoviesController {
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id, Principal principal) {
         // further reading to create GOOD API REST https://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
         //añadimos principal solo para saber si este es nuestra movie y poder eliminarla
-        if(movieRepository.existsByIdAndOwner(id, principal.getName())) {
-            movieRepository.deleteById(id);
 
-            return ResponseEntity.noContent().build();
+
+        if(!movieRepository.existsByIdAndOwner(id, principal.getName())) {
+           throw  new ResourceNotFoundException("Movie not found with id " + id);
         }
-
-        return  ResponseEntity.notFound().build();
+        movieRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
 
